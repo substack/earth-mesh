@@ -23,6 +23,7 @@ module.exports = function (data, opts) {
     for (var j = 0; j < coords.length; j++) {
       var n = points.length
       var len = coords[j].length
+      var olen = len
       for (var k = 0; k < len; k++) {
         var p = coords[j][k]
         var pp = coords[j][(k+1)%len]
@@ -43,6 +44,7 @@ module.exports = function (data, opts) {
         edges.push([n+k,n+(k+1)%len])
         points.push(p)
       }
+      progress += olen
     }
     clean(points, edges)
     for (var y = Math.max(ymin,-82); y < Math.min(ymax,82); y+=4) {
@@ -57,7 +59,6 @@ module.exports = function (data, opts) {
       })
     }))
     mesh.positions = mesh.positions.concat(points)
-    progress += coords.length
     if (typeof opts.progress === 'function') {
       opts.progress(progress, total)
     }
