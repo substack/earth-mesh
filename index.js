@@ -75,6 +75,20 @@ module.exports = function (data, opts) {
     }
   } else if (opts.format === 'latlon') {
     //
+  } else if (opts.format === 'thetaphi') {
+    for (var i = 0; i < mesh.positions.length; i++) {
+      var lat = mesh.positions[i][0]
+      var lon = mesh.positions[i][1]
+      mesh.positions[i][0] = lon * Math.PI / 180
+      mesh.positions[i][1] = lat * Math.PI / 180
+    }
+  } else if (opts.format === 'phitheta') {
+    for (var i = 0; i < mesh.positions.length; i++) {
+      var lat = mesh.positions[i][0]
+      var lon = mesh.positions[i][1]
+      mesh.positions[i][0] = lat * Math.PI / 180
+      mesh.positions[i][1] = lon * Math.PI / 180
+    }
   } else if (opts.format === 'xyz' || true) {
     for (var i = 0; i < mesh.positions.length; i++) {
       mesh.positions[i] = toxyz([], mesh.positions[i])
