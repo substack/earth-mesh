@@ -1,7 +1,11 @@
 {
   "name": "earth-mesh",
   "version": "1.0.0",
-  "bin": "bin/cmd.js",
+  "main": "index.js",
+  "description": "generate triangulated meshes from shapefiles and geojson",
+  "bin": {
+    "earth-mesh": "bin/cmd.js"
+  },
   "dependencies": {
     "almost-equal": "^1.1.0",
     "cdt2d": "^1.0.0",
@@ -11,5 +15,25 @@
     "shpjs": "^3.3.2",
     "simplicial-complex": "^1.0.0",
     "triangle-centroid": "^1.0.0"
-  }
+  },
+  "keywords": [
+    "simplicial complex",
+    "mesh",
+    "triangulate",
+    "earth",
+    "shapefile",
+    "geojson",
+    "gis",
+    "geo"
+  ],
+  "author": "substack",
+  "license": "BSD",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/substack/earth-mesh.git"
+  },
+  "bugs": {
+    "url": "https://github.com/substack/earth-mesh/issues"
+  },
+  "homepage": "https://github.com/substack/earth-mesh#readme"
 }
