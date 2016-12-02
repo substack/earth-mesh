@@ -4,7 +4,6 @@ var dist = require('gl-vec3/distance')
 var fs = require('fs')
 var skeleton = require('simplicial-complex').skeleton
 var toxyz = require('./to-xyz.js')
-var fromxyz = require('./from-xyz.js')
 var center = require('triangle-centroid')
 var aeq = require('almost-equal')
 
