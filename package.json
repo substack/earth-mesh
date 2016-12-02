@@ -1,0 +1,15 @@
+{
+  "name": "earth-mesh",
+  "version": "1.0.0",
+  "bin": "bin/cmd.js",
+  "dependencies": {
+    "almost-equal": "^1.1.0",
+    "cdt2d": "^1.0.0",
+    "clean-pslg": "^1.1.0",
+    "concat-stream": "^1.5.2",
+    "minimist": "^1.2.0",
+    "shpjs": "^3.3.2",
+    "simplicial-complex": "^1.0.0",
+    "triangle-centroid": "^1.0.0"
+  }
+}
