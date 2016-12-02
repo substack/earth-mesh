@@ -2,6 +2,20 @@
 
 generate triangulated meshes from shapefiles and geojson
 
+# usage
+
+```
+usage: earth-mesh FILE {OPTIONS}
+
+  -i --iformat   Input format: zip, json
+  -f --format    Output format: xyz, lonlat, latlon, thetaphi, phitheta
+  -p --progress  Show a progress bar.
+  -l --lines     Output mesh edges instead of triangles.
+
+Reads from stdin when FILE is "-" or not provided.
+
+```
+
 # example
 
 ## from geojson
