@@ -32,7 +32,10 @@ input.pipe(concat(function (buf) {
     fmt = 'zip'
   }
   var mesh = null
-  var opts = { progress: argv.progress ? pbar : null }
+  var opts = {
+    progress: argv.progress ? pbar : null,
+    format: argv.format
+  }
   if (fmt === 'zip') {
     mesh = createMesh(shp.parseZip(buf), opts)
   } else if (fmt === 'json') {
