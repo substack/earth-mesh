@@ -49,7 +49,7 @@ module.exports = function (data, opts) {
     clean(points, edges)
     for (var y = Math.max(ymin,-82); y < Math.min(ymax,82); y+=4) {
       for (var x = Math.max(xmin,-179.999); x < Math.min(xmax,179.999); x+=4) {
-        points.push([x,y])
+        points.push([x,y]) // lon,lat
       }
     }
     var cells = cdt(points, edges, { exterior: false, delaunay: true })
@@ -64,25 +64,26 @@ module.exports = function (data, opts) {
     }
   }
   if (opts.format === 'lonlat') {
-    for (var i = 0; i < mesh.positions.length; i++) {
-      var lat = mesh.positions[i][0]
-      var lon = mesh.positions[i][1]
-      mesh.positions[i][0] = lon
-      mesh.positions[i][1] = lat
-    }
-  } else if (opts.format === 'latlon') {
     //
+  } else if (opts.format === 'latlon') {
+    for (var i = 0; i < mesh.positions.length; i++) {
+      console.error(mesh.positions[i])
+      var lon = mesh.positions[i][0]
+      var lat = mesh.positions[i][1]
+      mesh.positions[i][0] = lat
+      mesh.positions[i][1] = lon
+    }
   } else if (opts.format === 'thetaphi') {
     for (var i = 0; i < mesh.positions.length; i++) {
-      var lat = mesh.positions[i][1]
       var lon = mesh.positions[i][0]
+      var lat = mesh.positions[i][1]
       mesh.positions[i][0] = lon * Math.PI / 180
       mesh.positions[i][1] = lat * Math.PI / 180
     }
   } else if (opts.format === 'phitheta') {
     for (var i = 0; i < mesh.positions.length; i++) {
-      var lat = mesh.positions[i][1]
       var lon = mesh.positions[i][0]
+      var lat = mesh.positions[i][1]
       mesh.positions[i][0] = lat * Math.PI / 180
       mesh.positions[i][1] = lon * Math.PI / 180
     }
