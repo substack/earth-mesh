@@ -31,7 +31,6 @@ input.pipe(concat(function (buf) {
   } else if (!fmt) {
     fmt = 'zip'
   }
-  console.error('fmt=', fmt)
   var mesh = null
   var opts = {
     progress: argv.progress ? pbar : null,
