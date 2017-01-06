@@ -28,9 +28,10 @@ input.pipe(concat(function (buf) {
     fmt = 'json'
   } else if (!fmt && /\.zip$/i.test(argv._[0])) {
     fmt = 'zip'
-  } else {
+  } else if (!fmt) {
     fmt = 'zip'
   }
+  console.error('fmt=', fmt)
   var mesh = null
   var opts = {
     progress: argv.progress ? pbar : null,
