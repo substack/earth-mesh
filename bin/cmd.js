@@ -28,7 +28,7 @@ input.pipe(concat(function (buf) {
     fmt = 'json'
   } else if (!fmt && /\.zip$/i.test(argv._[0])) {
     fmt = 'zip'
-  } {
+  } else {
     fmt = 'zip'
   }
   var mesh = null
