@@ -1,6 +1,6 @@
 {
   "name": "earth-mesh",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "index.js",
   "description": "generate triangulated meshes from shapefiles and geojson",
   "bin": {
