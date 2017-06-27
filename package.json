@@ -8,8 +8,6 @@
   },
   "dependencies": {
     "almost-equal": "^1.1.0",
-    "cdt2d": "^1.0.0",
-    "clean-pslg": "^1.1.0",
     "concat-stream": "^1.5.2",
     "earcut": "^2.1.1",
     "minimist": "^1.2.0",
