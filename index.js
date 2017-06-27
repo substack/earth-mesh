@@ -3,7 +3,7 @@ var earcut = require('earcut')
 module.exports = function (mesh, f) {
   var draw = {
     points: { positions: [], count: 0 },
-    linestrip: {positions: [], count: 0 },
+    linestrip: { positions: [], count: 0 },
     triangles: { positions: [], cells: [] }
   }
   walk(mesh)
@@ -12,6 +12,9 @@ module.exports = function (mesh, f) {
   function walk (m) {
     if (m.features) m.features.forEach(walk)
     if (m.geometry) geometry(m.geometry, m)
+    if (m.geometries) {
+      m.geometries.forEach(function (g) { geometry(g, m) })
+    }
   }
   function geometry (g, m) {
     if (g.type === 'Point') {
@@ -178,13 +181,14 @@ module.exports = function (mesh, f) {
       var data = earcut.flatten(g.coordinates)
       var cells = earcut(data.vertices, data.holes, data.dimensions)
       var len = draw.triangles.positions.length
-      for (var i = 0; i < cells.length; i++) {
-        draw.triangles.cells.push(len + cells[i])
+      for (var i = 0; i < cells.length; i+=3) {
+        var c = [len+cells[i],len+cells[i+1],len+cells[i+2]]
+        draw.triangles.cells.push(c)
       }
-      for (var i = 0; i < data.vertices.length; i++) {
-        draw.triangles.positions.push(data.vertices[i])
+      for (var i = 0; i < data.vertices.length; i+=2) {
+        draw.triangles.positions.push(data.vertices.slice(i,i+2))
         if (f) {
-          var xattrs = f(m, data.vertices[i], i)
+          var xattrs = f(m, g.coordinates[i], i)
           if (xattrs) {
             var keys = Object.keys(xattrs)
             for (var j = 0; j < keys.length; j++) {
@@ -201,13 +205,14 @@ module.exports = function (mesh, f) {
         var data = earcut.flatten(g.coordinates[j])
         var cells = earcut(data.vertices, data.holes, data.dimensions)
         var len = draw.triangles.positions.length
-        for (var i = 0; i < cells.length; i++) {
-          draw.triangles.cells.push(len + cells[i])
+        for (var i = 0; i < cells.length; i+=3) {
+          var c = [len+cells[i],len+cells[i+1],len+cells[i+2]]
+          draw.triangles.cells.push(c)
         }
-        for (var i = 0; i < data.vertices.length; i++) {
-          draw.triangles.positions.push(data.vertices[i])
+        for (var i = 0; i < data.vertices.length; i+=2) {
+          draw.triangles.positions.push(data.vertices.slice(i,i+2))
           if (f) {
-            var xattrs = f(m, data.vertices[i], j, i)
+            var xattrs = f(m, g.coordinates[j][i], j, i)
             if (xattrs) {
               var keys = Object.keys(xattrs)
               for (var k = 0; k < keys.length; k++) {
@@ -221,7 +226,9 @@ module.exports = function (mesh, f) {
         }
       }
     } else if (g.type === 'GeometryCollection') {
-      // ...
+      if (g.geometries) {
+        g.geometries.forEach(function (g) { geometry(g, m) })
+      }
     }
   }
 }
