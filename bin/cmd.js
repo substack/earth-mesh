@@ -9,7 +9,7 @@ var createMesh = require('../')
 var minimist = require('minimist')
 var argv = minimist(process.argv.slice(2), {
   boolean: [ 'lines', 'progress' ],
-  alias: { i: 'iformat', f: 'format', p: 'progress', h: 'help' }
+  alias: { i: 'iformat', f: 'format', p: 'progress', l: 'lines', h: 'help' }
 })
 if (argv.help) {
   return fs.createReadStream(path.join(__dirname,'usage.txt'))
