@@ -1,10 +1,16 @@
 var earcut = require('earcut')
 
-module.exports = function (mesh, f) {
+module.exports = function (mesh, opts, f) {
+  if (typeof opts === 'function') {
+    f = opts
+    opts = {}
+  }
+  if (!opts) opts = {}
+  if (!f) f = function (x) { return null }
   var draw = {
-    points: { positions: [], count: 0 },
+    point: { positions: [], count: 0 },
     linestrip: { positions: [], count: 0 },
-    triangles: { positions: [], cells: [] }
+    triangle: { positions: [], cells: [] }
   }
   walk(mesh)
   return draw
@@ -18,33 +24,33 @@ module.exports = function (mesh, f) {
   }
   function geometry (g, m) {
     if (g.type === 'Point') {
-      draw.points.positions.push(g.coordinates)
-      draw.points.count++
+      draw.point.positions.push(g.coordinates)
+      draw.point.count++
       if (f) {
         var xattrs = f(m, g, 0)
         if (xattrs) {
           var keys = Object.keys(xattrs)
           for (var i = 0; i < keys.length; i++) {
-            if (!draw.points[keys[i]]) {
-              draw.points[keys[i]] = []
+            if (!draw.point[keys[i]]) {
+              draw.point[keys[i]] = []
             }
-            draw.points[keys[i]].push(xattrs[keys[i]])
+            draw.point[keys[i]].push(xattrs[keys[i]])
           }
         }
       }
     } else if (g.type === 'MultiPoint') {
       for (var i = 0; i < g.coordinates.length; i++) {
-        draw.points.positions.push(g.coordinates[i])
-        draw.points.count++
+        draw.point.positions.push(g.coordinates[i])
+        draw.point.count++
         if (f) {
           var xattrs = f(m, g.coordinates[i], i)
           if (xattrs) {
             var keys = Object.keys(xattrs)
             for (var i = 0; i < keys.length; i++) {
-              if (!draw.points[keys[i]]) {
-                draw.points[keys[i]] = []
+              if (!draw.point[keys[i]]) {
+                draw.point[keys[i]] = []
               }
-              draw.points[keys[i]].push(xattrs[keys[i]])
+              draw.point[keys[i]].push(xattrs[keys[i]])
             }
           }
         }
@@ -63,7 +69,7 @@ module.exports = function (mesh, f) {
               if (!draw.linestrip[keys[i]]) {
                 draw.linestrip[keys[i]] = []
               }
-              draw.points[keys[i]].push(xattrs[keys[i]])
+              draw.point[keys[i]].push(xattrs[keys[i]])
             }
           }
         }
@@ -127,7 +133,7 @@ module.exports = function (mesh, f) {
                 if (!draw.linestrip[keys[i]]) {
                   draw.linestrip[keys[i]] = []
                 }
-                draw.points[keys[i]].push(xattrs[keys[i]])
+                draw.point[keys[i]].push(xattrs[keys[i]])
               }
             }
           }
@@ -180,22 +186,22 @@ module.exports = function (mesh, f) {
     } else if (g.type === 'Polygon') {
       var data = earcut.flatten(g.coordinates)
       var cells = earcut(data.vertices, data.holes, data.dimensions)
-      var len = draw.triangles.positions.length
+      var len = draw.triangle.positions.length
       for (var i = 0; i < cells.length; i+=3) {
         var c = [len+cells[i],len+cells[i+1],len+cells[i+2]]
-        draw.triangles.cells.push(c)
+        draw.triangle.cells.push(c)
       }
       for (var i = 0; i < data.vertices.length; i+=2) {
-        draw.triangles.positions.push(data.vertices.slice(i,i+2))
+        draw.triangle.positions.push(data.vertices.slice(i,i+2))
         if (f) {
           var xattrs = f(m, g.coordinates[i], i)
           if (xattrs) {
             var keys = Object.keys(xattrs)
             for (var j = 0; j < keys.length; j++) {
-              if (!draw.triangles[keys[j]]) {
-                draw.triangles[keys[j]] = []
+              if (!draw.triangle[keys[j]]) {
+                draw.triangle[keys[j]] = []
               }
-              draw.triangles[keys[j]].push(xattrs[keys[j]])
+              draw.triangle[keys[j]].push(xattrs[keys[j]])
             }
           }
         }
@@ -204,22 +210,22 @@ module.exports = function (mesh, f) {
       for (var j = 0; j < g.coordinates.length; j++) {
         var data = earcut.flatten(g.coordinates[j])
         var cells = earcut(data.vertices, data.holes, data.dimensions)
-        var len = draw.triangles.positions.length
+        var len = draw.triangle.positions.length
         for (var i = 0; i < cells.length; i+=3) {
           var c = [len+cells[i],len+cells[i+1],len+cells[i+2]]
-          draw.triangles.cells.push(c)
+          draw.triangle.cells.push(c)
         }
         for (var i = 0; i < data.vertices.length; i+=2) {
-          draw.triangles.positions.push(data.vertices.slice(i,i+2))
+          draw.triangle.positions.push(data.vertices.slice(i,i+2))
           if (f) {
             var xattrs = f(m, g.coordinates[j][i], j, i)
             if (xattrs) {
               var keys = Object.keys(xattrs)
               for (var k = 0; k < keys.length; k++) {
-                if (!draw.triangles[keys[k]]) {
-                  draw.triangles[keys[k]] = []
+                if (!draw.triangle[keys[k]]) {
+                  draw.triangle[keys[k]] = []
                 }
-                draw.triangles[keys[k]].push(xattrs[keys[k]])
+                draw.triangle[keys[k]].push(xattrs[keys[k]])
               }
             }
           }
