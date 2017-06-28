@@ -4,11 +4,12 @@ var fs = require('fs')
 var path = require('path')
 var skeleton = require('simplicial-complex').skeleton
 var concat = require('concat-stream')
+var fivecolor = require('five-color-map')
 var createMesh = require('../')
 
 var minimist = require('minimist')
 var argv = minimist(process.argv.slice(2), {
-  boolean: [ 'lines', 'progress' ],
+  boolean: [ 'lines', 'progress', 'fivecolor' ],
   alias: { i: 'iformat', f: 'format', p: 'progress', l: 'lines', h: 'help' }
 })
 if (argv.help) {
@@ -37,9 +38,9 @@ input.pipe(concat(function (buf) {
     format: argv.format
   }
   if (fmt === 'zip') {
-    mesh = createMesh(shp.parseZip(buf), opts)
+    mesh = parse(shp.parseZip(buf), opts)
   } else if (fmt === 'json') {
-    mesh = createMesh(JSON.parse(buf.toString('utf8')), opts)
+    mesh = parse(JSON.parse(buf.toString('utf8')), opts)
   } else {
     console.error('unsupported format')
     return process.exit(1)
@@ -56,4 +57,16 @@ function pbar (n, total) {
   } else {
     process.stderr.write('\r' + n + '/' + total + ' ')
   }
+}
+
+function parse (geojson) {
+  if (argv.fivecolor) {
+    geojson = fivecolor(geojson)
+    var colors = ['#fbb4ae','#b3cde3','#ccebc5','#decbe4','#fed9a6']
+    return createMesh(geojson, function (m) {
+      return {
+        colors: colors.indexOf(m.properties.fill)
+      }
+    })
+  } else return createMesh(geojson)
 }

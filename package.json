@@ -10,6 +10,7 @@
     "almost-equal": "^1.1.0",
     "concat-stream": "^1.5.2",
     "earcut": "^2.1.1",
+    "five-color-map": "^1.0.4",
     "minimist": "^1.2.0",
     "shpjs": "^3.3.2",
     "simplicial-complex": "^1.0.0",
