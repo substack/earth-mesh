@@ -8,9 +8,6 @@ generate triangulated meshes from shapefiles and geojson
 usage: earth-mesh FILE {OPTIONS}
 
   -i --iformat   Input format: zip, json
-  -f --format    Output format: xyz, lonlat, latlon, thetaphi, phitheta
-  -p --progress  Show a progress bar.
-  -l --lines     Output mesh edges instead of triangles.
 
 Reads from stdin when FILE is "-" or not provided.
 
@@ -54,17 +51,6 @@ var createMesh = require('earth-mesh')
 ## var mesh = createMesh(geodata, opts)
 
 Create a simplicial complex `mesh` from some geojson-formatted data.
-
-* `opts.progress(n,total)` - function to call when units of work are finished
-* `opts.format` - control the output format for position vertices
-
-Available formats:
-
-* `'xyz'` - `[x,y,z]` coordinates on the unit sphere (default)
-* `'lonlat'` - `[lon,lat]` pairs in degrees
-* `'latlon'` - `[lat,lon]` pairs in degrees
-* `'thetaphi'` - `[theta,phi]` pairs in radians
-* `'phitheta'` - `[phi,theta]` pairs in radians
 
 # install
 
