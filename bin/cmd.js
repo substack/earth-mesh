@@ -11,7 +11,7 @@ var tiles = require('../tiles.js')
 var minimist = require('minimist')
 var argv = minimist(process.argv.slice(2), {
   boolean: [ 'lines', 'progress', 'fivecolor' ],
-  alias: { i: 'iformat', o: 'outfile', h: 'help' }
+  alias: { i: 'iformat', o: 'outdir', h: 'help' }
 })
 if (argv.help) {
   return fs.createReadStream(path.join(__dirname,'usage.txt'))
@@ -30,11 +30,11 @@ input.pipe(concat(function (buf) {
       ycount: xy[1],
       bbox: argv.bbox
     })
-    if (argv.outfile) {
+    if (argv.outdir) {
       var pending = ts.length
       var errors = []
       for (var n = 0; n < ts.length; n++) {
-        var file = argv.outfile.replace(/\$N\b/,n)
+        var file = path.join(argv.outdir, n + '.json')
         fs.writeFile(file, JSON.stringify(ts[n]), function (err) {
           if (err) errors.push(err)
           if (--pending === 0) done()
