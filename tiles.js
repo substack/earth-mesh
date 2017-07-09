@@ -33,26 +33,33 @@ module.exports = function (data, opts) {
       if (cell.length !== 3) {
         throw new Error('non-triangle cell at position ' + j)
       }
-      var pt = data.triangle.positions[cell[0]]
-      if (inside(bbox, pt)) insert(tile, cell, ipts)
+      for (var k = 0; k < 3; k++) {
+        var pt = data.triangle.positions[cell[k]]
+        if (inside(bbox, pt)) {
+          insert(tile, cell, ipts)
+          break
+        }
+      }
     }
   }
   return tiles
+
   function insert (tile, cell, ipts) {
     var ti = 0
     var ncell = [0,0,0]
     for (var k = 0; k < 3; k++) {
       if (ipts[cell[k]] !== undefined) {
         ti = ipts[cell[k]]
-      } else {
-        ti = tile.triangle.positions.length
-        var pt = data.triangle.positions[cell[k]]
-        tile.triangle.positions.push(pt)
-        ipts[cell[k]] = ti
-        for (var x = 0; x < tkeys.length; x++) {
-          var tv = data.triangle[tkeys[x]][cell[k]]
-          tile.triangle[tkeys[x]].push(tv)
-        }
+        ncell[k] = ti
+        continue
+      }
+      ti = tile.triangle.positions.length
+      var pt = data.triangle.positions[cell[k]]
+      tile.triangle.positions.push(pt)
+      ipts[cell[k]] = ti
+      for (var x = 0; x < tkeys.length; x++) {
+        var tv = data.triangle[tkeys[x]][cell[k]]
+        tile.triangle[tkeys[x]].push(tv)
       }
       ncell[k] = ti
     }
