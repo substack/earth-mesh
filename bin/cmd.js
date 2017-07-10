@@ -31,9 +31,12 @@ input.pipe(concat(function (buf) {
       bbox: argv.bbox
     })
     if (argv.outdir) {
+      var meta = {}
       var pending = ts.length
       var errors = []
       for (var n = 0; n < ts.length; n++) {
+        meta[n] = ts[n].bbox
+        delete ts[n].bbox
         var file = path.join(argv.outdir, n + '.json')
         fs.writeFile(file, JSON.stringify(ts[n]), function (err) {
           if (err) errors.push(err)
@@ -41,8 +44,12 @@ input.pipe(concat(function (buf) {
         })
       }
       function done () {
-        errors.forEach(function (err) { console.error(err) })
-        if (errors.length) process.exit(1)
+        var mfile = path.join(argv.outdir, 'meta.json')
+        fs.writeFile(mfile, JSON.stringify(meta), function (err) {
+          if (err) errors.push(err)
+          errors.forEach(function (err) { console.error(err) })
+          if (errors.length) process.exit(1)
+        })
       }
     } else {
       console.log(JSON.stringify(ts))
@@ -77,7 +84,20 @@ function readGeoShp (buf) {
   if (argv.lines) {
     mesh.cells = skeleton(mesh.cells,1)
   }
-  console.log(JSON.stringify(mesh))
+  var size = 50000
+  Object.keys(mesh).forEach(function (key,i) {
+    process.stdout.write((i===0?'{':',')+JSON.stringify(key)+':')
+    Object.keys(mesh[key]).forEach(function (k,j) {
+      process.stdout.write((j===0?'{':',')+JSON.stringify(k)+':[')
+      for (var n = 0; n < mesh[key][k].length; n+=size) {
+        var s = JSON.stringify(mesh[key][k].slice(n,n+size))
+        process.stdout.write((n===0?'':',')+s.slice(1,-1))
+      }
+      process.stdout.write(']')
+    })
+    process.stdout.write('}')
+  })
+  process.stdout.write('}\n')
 }
 
 function pbar (n, total) {
