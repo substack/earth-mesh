@@ -7,7 +7,7 @@ module.exports = function (mesh, opts, f) {
   }
   if (!opts) opts = {}
   if (!f) f = function (x) { return null }
-  var draw = {
+  var draw = opts.draw || {
     point: { positions: [], count: 0 },
     linestrip: { positions: [], count: 0 },
     triangle: { positions: [], cells: [] }
